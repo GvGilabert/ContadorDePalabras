@@ -15,6 +15,9 @@ import platform
 import tkinter as tk
 from tkinter import filedialog
 import threading
+from multiprocessing import Pool
+
+RESULTADO = [] #Lista donde se guardaran los resultados
 
 #Ticker
 #Clase que inicia y finaliza un temporizador para llevar el control del tiempo que demoran en ejecutarse las diferentes formas de procesar 
@@ -82,20 +85,16 @@ def MenuDeOpciones():
 # (, . - _ : ; ! ? ...) e ingresarlos en una lista que devolverá en su return.
 def LeerTexto(ARCHIVO):
     texto = []
-    delete_list = ['\n',',', '.','!', '¡', '?', '¿', '[', ']', '(', ')', '_', '-',';', ':']
+    delete_list = ['\n',',', '.','!', '¡', '?', '¿', '[', ']', '(', ')', '_', '-',';', ':','0','1','2','3','4','5','6','7','8','9','10']
     fileIn = open(ARCHIVO, mode=('rt'), encoding=('utf-8'))
-    fileOut = open('cleanText.txt', mode=('wt+'), encoding=('utf-8'))
     for line in fileIn:
         for word in delete_list:
             line = line.replace(word,"")
-        fileOut.write(line)
-    fileOut = open('cleanText.txt', mode=("rt"), encoding=("utf-8"))
-    for line in fileOut:
-        for word in line.split():
-           texto.append(word)
+            
+        for word2 in line.split():
+            texto.append(word2)
     fileIn.close()
-    fileOut.close()
-    print ("Cargando lista desde txt")
+    print ("Palabras a procesar: "+str(len(texto)))
     return texto  
 
 #def SetUp(texto,logData,process):
@@ -111,8 +110,9 @@ def SetUp(texto,logData,process):
     elif process == 1:
         hilos = int(input("Ingrese cantidad de threads a utilizar"))
         return ProcesarThreads(texto,hilos,logData)
-    #elif process == 2:
-        #return ProcesarProcesses(texto,hilos,logData)
+    elif process == 2:
+        hilos = int(input("Ingrese cantidad de threads a utilizar"))
+        return ProcesarProcesses(texto,hilos,logData)
     #else:
         #return ProcesarMixto(texto,hilos,subHilos,logData)
 
@@ -123,16 +123,16 @@ def SetUp(texto,logData,process):
 #palabra + cantidad de repeticiones (ordenada previamente), como una tupla que tenga nombre + cantidad o como un objeto del tipo resultado que 
 #tenga dos propiedades ej resultado{Palabra="casa",Repeticiones=102}
 def Procesar (text):
-    resultado = []
     t = list(set(text))         #Copia de la lista de palabras sin duplicados
+    e = []
     for i in t:                     #Recorre la lista sin duplicados (t)
         palabra = Resultado()       #Crea un nuevo objeto para almacenar el resultado
         palabra.Palabra = i         #Asigna la palabra actual a nuestro objeto de resultado
         for j in text:                  #Recorre la lista completa de palabras
             if (i==j):                      #Si encuentra una coincidencia
                 palabra.Repeticiones += 1       #Suma uno al valor repeticiones de nuestro objeto resultado
-        resultado.append(palabra)           #Guardamos el resultado en una lista
-    return resultado
+        e.append(palabra) #Guardamos el resultado en una lista
+    return e
 
 #def PROCESARSIMPLE
 #     #Inicia el Ticker(logData, "Simple", 1) para que inicie el control del tiempo.
@@ -141,9 +141,8 @@ def Procesar (text):
 #     return resultado = []
 def ProcesarSimple(text,logData):
     timer = Ticker(logData,"Single","1")
-    resultado = Procesar(text)
+    Procesar(text)
     timer()
-    return resultado
 
 
 # def ProcesarThreads(text,NdeThreads,logData):
@@ -160,23 +159,23 @@ def ProcesarThreads(text,NdeThreads,logData):
     tpt=len(text)//NdeThreads
     s = 0
     f = oh + tpt
-    result = []
+    threads = []
     timer = Ticker(logData,"Threads",str(NdeThreads))
-    while NdeThreads>0:
-       partText = text[s:f]
-       a = threading.Thread(target=Procesar, args=(partText,))
-       a.start()
-       s = f+1
-       f += tpt
-       NdeThreads -= 1
-       result.append(a)
-    for i in result:
-        i.join()
-    
-    timer()
-    return result
+    from multiprocessing.pool import ThreadPool
+    pool = ThreadPool(processes=NdeThreads)
 
-# def ProcesarProcesses(texto,NdeProcesses,logData):
+    while NdeThreads>0:
+        partText = text[s:f]
+        threads.append(pool.apply_async(Procesar, (partText,)))
+        s = f+1
+        f += tpt
+        NdeThreads -= 1
+    for i in threads:
+        for j in i.get():
+            RESULTADO.append(j)
+    timer()
+
+# def ProcesarProcesses(text,NdeProcesses,logData):
 #     #Inicia el Ticker()
 #     #Divide la información de text por el NdeProcesses y esa es la cantidad de palabras a procesar por proceso.
 #     #Inicia un process por cada NdeProcesses y cada uno ejecuta Procesar(text) y le pasa por parametro una lista con la cantidad de palabras que le corresponda según 
@@ -185,6 +184,33 @@ def ProcesarThreads(text,NdeThreads,logData):
 #     #y ordenada.
 #     #Ejecutar Ticker() para controlar el tiempo demorado.
 #     return resultado = []
+
+def ProcesarProcesses(text,NdeProcesses,logData):
+    oh=len(text)%4
+    tpt=len(text)//4
+    s = 0
+    f = oh + tpt
+    threads = []
+    timer = Ticker(logData,"Process",str(NdeProcesses))
+    if __name__ == '__main__':
+        pool = Pool(processes=NdeProcesses)
+        p1 = pool.apply_async(Procesar, (text[s:f]))
+        s = f+1
+        f += tpt
+        p2 = pool.apply_async(Procesar,(text[s:f]))
+        s = f+1
+        f += tpt
+        p3 = pool.apply_async(Procesar,(text[s:f]))
+        s = f+1
+        f += tpt
+        p4 = pool.apply_async(Procesar,(text[s:f]))
+        pool.close();
+        pool.join();
+        RESULTADO.append(p1)
+        RESULTADO.append(p2)
+        RESULTADO.append(p3)
+        RESULTADO.append(p4)
+    timer()
 
 # def ProcesarMixto(texto,NdeProcesses,NdeThreads,logData):
 #     #Inicia el Ticker()
@@ -196,6 +222,14 @@ def ProcesarThreads(text,NdeThreads,logData):
 #     #Ejecutar Ticker() para controlar el tiempo demorado.
 #     return resultado = []
 
+#Unificar resultados
+def UnificarResultados(text):
+    for i in range(len(text)):
+        for j in range(1,len(text)):
+            if text[i].Palabra == text[j].Palabra:
+                text[i].Repeticiones += text[j].Repeticiones
+                text[j].Repeticiones=0
+    return text
 
 #PROGRAMA PRINCIPAL
 #resultado = MenuDeOpciones()
@@ -203,4 +237,14 @@ def ProcesarThreads(text,NdeThreads,logData):
 
 var = MenuDeOpciones()
 
-print(var)
+#res = UnificarResultados(RESULTADO)
+#return_val = async_result.get()  # get the return value from your function.
+a = []
+count = 0
+
+for j in RESULTADO:
+    print(j.Palabra,j.Repeticiones)
+    count +=1
+    #a.append(i.async_result.get())  # get the return value from your function.) print (i.value  .Palabra,i.Repeticiones)
+
+print(count)
