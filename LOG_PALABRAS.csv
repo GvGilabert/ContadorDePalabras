@@ -1,0 +1,22 @@
+Id,Hardware,Tipodeproceso,Hilos,Tiempo
+1,AMD FX-8370 Eight-Core Processorde 8 RAM:15.90GBs,Windows 10.0.17134,Simple,1,4.775899171829224
+
+3/8,AMD FX-8370 Eight-Core Processorde 8 RAM:15.90GBs,Windows 10.0.17134,Threads,3,3.425204038619995
+6/8,AMD FX-8370 Eight-Core Processorde 8 RAM:15.90GBs,Windows 10.0.17134,Threads,6,3.9732041358947754
+7/8,AMD FX-8370 Eight-Core Processorde 8 RAM:15.90GBs,Windows 10.0.17134,Threads,7,4.045092582702637
+2/8,AMD FX-8370 Eight-Core Processorde 8 RAM:15.90GBs,Windows 10.0.17134,Threads,2,4.32114315032959
+1/8,AMD FX-8370 Eight-Core Processorde 8 RAM:15.90GBs,Windows 10.0.17134,Threads,1,4.405200004577637
+8/8,AMD FX-8370 Eight-Core Processorde 8 RAM:15.90GBs,Windows 10.0.17134,Threads,8,4.643146276473999
+4/8,AMD FX-8370 Eight-Core Processorde 8 RAM:15.90GBs,Windows 10.0.17134,Threads,4,4.5781409740448
+5/8,AMD FX-8370 Eight-Core Processorde 8 RAM:15.90GBs,Windows 10.0.17134,Threads,5,4.641192197799683
+
+2/4,AMD FX-8370 Eight-Core Processorde 8 RAM:15.90GBs,Windows 10.0.17134,Threads,2,3.0229709148406982
+4/4,AMD FX-8370 Eight-Core Processorde 8 RAM:15.90GBs,Windows 10.0.17134,Threads,4,4.47422456741333
+3/4,AMD FX-8370 Eight-Core Processorde 8 RAM:15.90GBs,Windows 10.0.17134,Threads,3,4.6691648960113525
+1/4,AMD FX-8370 Eight-Core Processorde 8 RAM:15.90GBs,Windows 10.0.17134,Threads,1,4.517226696014404
+
+2/2,AMD FX-8370 Eight-Core Processorde 8 RAM:15.90GBs,Windows 10.0.17134,Threads,2,4.61120080947876
+1/2,AMD FX-8370 Eight-Core Processorde 8 RAM:15.90GBs,Windows 10.0.17134,Threads,1,4.689143419265747
+1,AMD FX-8370 Eight-Core Processorde 8 RAM:15.90GBs,Windows 10.0.17134,Simple,1,1.099937915802002
+1,AMD FX-8370 Eight-Core Processorde 8 RAM:15.90GBs,Windows 10.0.17134,Simple,1,1.1049370765686035
+4/4,AMD FX-8370 Eight-Core Processorde 8 RAM:15.90GBs,Windows 10.0.17134,Threads,4,0.29904937744140625
